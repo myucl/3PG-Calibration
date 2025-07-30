@@ -82,8 +82,7 @@ initialize_3pg_data <- function(timeStep = "weekly") {
 }
 
 # Generate initial training data
-#Modify 2000
-generate_initial_data <- function(para_sub, sitka, modif, n_samples = 100) {
+generate_initial_data <- function(para_sub, sitka, modif, n_samples = 2000) {
   
   cat("Generating initial training data...\n")
   
@@ -255,10 +254,9 @@ evaluate_3pg <- function(design_points, para_sub, sitka, modif) {
 }
 
 # Process a single wave
-#same, modify 2000
 process_wave <- function(wave_num, EmulatorList, target_level, control_list, 
                         my_obs_values, my_disc_values, my_obserr_values,
-                        para_sub, sitka, modif, n_iter = 100) {
+                        para_sub, sitka, modif, n_iter = 2000) {
   
   cat(sprintf("\n=== Processing Wave %d ===\n", wave_num))
   
@@ -416,6 +414,7 @@ get_observed_data <- function(flxdata_daily, timeStep = "monthly", startYear = 2
 run_3pg_waves <- function(n_waves, 
                          target_levels = NULL,
                          n_iter = 2000,
+                         n_samples = 2000,
                          control_params = NULL,
                          timeStep = "weekly") {
   
@@ -453,7 +452,7 @@ run_3pg_waves <- function(n_waves,
   
   # Generate initial training data
   initial_data <- generate_initial_data(data_setup$para_sub, data_setup$sitka, 
-                                       data_setup$modif)
+                                       data_setup$modif, n_samples)
   
   # Build initial emulators
   initial_emulators <- build_initial_emulators(initial_data)
@@ -621,9 +620,9 @@ display_results <- function(results) {
 }
 
 # Example usage:
-results <- run_3pg_waves(n_waves = 3, target_levels = c(0.25, 0.1, 0.05))
-display_results(results) 
+# results <- run_3pg_waves(n_waves = 3, target_levels = c(0.25, 0.1, 0.05), n_iter = 2000, n_samples = 2000)
+# display_results(results) 
 
-results <- run_3pg_waves(n_waves = 1, target_levels = 0.25)
+results <- run_3pg_waves(n_waves = 1, target_levels = 0.25, n_iter = 100, n_samples = 100)
 display_results(results) 
 
