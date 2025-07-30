@@ -310,8 +310,16 @@ process_wave <- function(wave_num, EmulatorList, target_level, control_list,
     }
   }
   
-  # Add ID column for plotting
-  wave_output$ID <- rep(1:nrow(wave_des), each = length(months))
+  # Add ID column for plotting - calculate correct number of time points per design point
+  n_timepoints_per_design <- nrow(wave_output) / nrow(wave_des)
+  
+  # Safety check: ensure we have whole number of time points per design point
+  if (n_timepoints_per_design != round(n_timepoints_per_design)) {
+    cat("Warning: Uneven number of time points per design point. Using sequential ID assignment.\n")
+    wave_output$ID <- rep(1:nrow(wave_des), length.out = nrow(wave_output))
+  } else {
+    wave_output$ID <- rep(1:nrow(wave_des), each = n_timepoints_per_design)
+  }
   
   return(list(
     ladder = new_ladder,
